@@ -2,6 +2,7 @@
 dependencies: []
 
 galaxy_info:
+  role_name: apache
   author: Chase Reidinger
   description: Apache packages for Debian/Ubuntu
   company: "AdepDev, LLC"
