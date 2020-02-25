@@ -24,7 +24,7 @@
 {% endif %}
     ServerAdmin chase@adepdev.com
     {% if laravel_config %}
-    DocumentRoot {{ doc_root }}public
+    DocumentRoot {{ doc_root }}/public
     {% else %}
     DocumentRoot {{ doc_root }}
     {% endif %}
@@ -38,7 +38,7 @@
     {% endif %}
 
     {% if laravel_config %}
-    <Directory {{ doc_root }}public>
+    <Directory {{ doc_root }}/public>
     {% else %}
     <Directory {{ doc_root }}>
     {% endif %}
