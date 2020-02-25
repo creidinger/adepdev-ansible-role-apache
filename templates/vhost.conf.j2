@@ -23,7 +23,12 @@
 <VirtualHost *:80>
 {% endif %}
     ServerAdmin chase@adepdev.com
+    {% if laravel_config %}
+    DocumentRoot {{ doc_root }}/public
+    {% else %}
     DocumentRoot {{ doc_root }}
+    {% endif %}
+
 
     ServerName {{ servername }}
     ServerAlias {{ serveralias }}
@@ -32,7 +37,11 @@
     EnableSendfile off
     {% endif %}
 
+    {% if laravel_config %}
+    <Directory {{ doc_root }}/public>
+    {% else %}
     <Directory {{ doc_root }}>
+    {% endif %}
         AllowOverride None
         Options -Indexes +FollowSymLinks
 
