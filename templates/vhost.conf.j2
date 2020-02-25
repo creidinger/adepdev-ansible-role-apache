@@ -23,7 +23,7 @@
 <VirtualHost *:80>
 {% endif %}
     ServerAdmin chase@adepdev.com
-    {% if laravel_config %}
+    {% if {{ laravel_config }} %}
     DocumentRoot {{ doc_root }}/public
     {% else %}
     DocumentRoot {{ doc_root }}
@@ -37,7 +37,7 @@
     EnableSendfile off
     {% endif %}
 
-    {% if laravel_config %}
+    {% if {{ laravel_config }} %}
     <Directory {{ doc_root }}/public>
     {% else %}
     <Directory {{ doc_root }}>
