@@ -6,82 +6,82 @@
 #
 ################################################################################
 {% if not local_deploy %}
-    <VirtualHost {{ ansible_host }}:80>
-        ServerAdmin {{ server_admin }}
+<VirtualHost {{ ansible_host }}:80>
+    ServerAdmin {{ server_admin }}
 
-        ServerName {{ servername }}
-        ServerAlias {{ serveralias }}
+    ServerName {{ servername }}
+    ServerAlias {{ serveralias }}
 
-        Redirect / {{ base_url }}
+    Redirect / {{ base_url }}
 
-        ErrorLog {{ apache_log_dir }}/{{ servername }}-error.log
-        CustomLog {{ apache_log_dir }}/{{ servername }}-access.log combined
-    </VirtualHost>
+    ErrorLog {{ apache_log_dir }}/{{ servername }}-error.log
+    CustomLog {{ apache_log_dir }}/{{ servername }}-access.log combined
+</VirtualHost>
 
-    <VirtualHost {{ ansible_host }}:443>
+<VirtualHost {{ ansible_host }}:443>
 {% else %}
-    <VirtualHost *:80>
+<VirtualHost *:80>
 {% endif %}
-        ServerAdmin {{ server_admin }}
-        {% if laravel_config %}
-        DocumentRoot {{ doc_root }}/public
-        {% else %}
-        DocumentRoot {{ doc_root }}
+    ServerAdmin {{ server_admin }}
+    {% if laravel_config %}
+    DocumentRoot {{ doc_root }}/public
+    {% else %}
+    DocumentRoot {{ doc_root }}
+    {% endif %}
+
+    ServerName {{ servername }}
+    ServerAlias {{ serveralias }}
+
+    {% if local_deploy %}
+    EnableSendfile off
+    {% endif %}
+
+    {% if laravel_config %}
+    <Directory {{ doc_root }}/public>
+    {% else %}
+    <Directory {{ doc_root }}>
+    {% endif %}
+
+        AllowOverride None
+        Options -Indexes +FollowSymLinks
+
+        Header set X-UA-Compatible: IE=edge
+        SetEnv ENV_URL {{ base_url }}
+
+        {% if debug_mode is defined %}
+            SetEnv APP_DEBUG on
         {% endif %}
 
-        ServerName {{ servername }}
-        ServerAlias {{ serveralias }}
+        RewriteEngine On
+
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteCond %{REQUEST_URI} !=/favicon.ico
+        RewriteRule ^ index.php [L]
+
+
+        {% if auth_type=="basic" %}
+        AuthType Basic
+        AuthName "This page is restricted"
+        AuthBasicProvider file
+        AuthUserFile /etc/apache2/{{ servername }}-passwd
+        Require valid-user
+        {% else %}
+        Require all granted
+        {% endif %}
+
+        Order allow,deny
+        Allow from all
 
         {% if local_deploy %}
-        EnableSendfile off
+        EnableSendfile Off
         {% endif %}
+    </Directory>
 
-        {% if laravel_config %}
-        <Directory {{ doc_root }}/public>
-        {% else %}
-        <Directory {{ doc_root }}>
-        {% endif %}
-
-            AllowOverride None
-            Options -Indexes +FollowSymLinks
-
-            Header set X-UA-Compatible: IE=edge
-            SetEnv ENV_URL {{ base_url }}
-
-            {% if debug_mode is defined %}
-                SetEnv APP_DEBUG on
-            {% endif %}
-
-            RewriteEngine On
-
-            RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteCond %{REQUEST_FILENAME} !-d
-            RewriteCond %{REQUEST_URI} !=/favicon.ico
-            RewriteRule ^ index.php [L]
-
-
-            {% if auth_type=="basic" %}
-            AuthType Basic
-            AuthName "This page is restricted"
-            AuthBasicProvider file
-            AuthUserFile /etc/apache2/{{ servername }}-passwd
-            Require valid-user
-            {% else %}
-            Require all granted
-            {% endif %}
-
-            Order allow,deny
-            Allow from all
-
-            {% if local_deploy %}
-            EnableSendfile Off
-            {% endif %}
-        </Directory>
-
-        <Directory ~ "^{{ doc_root }}/(pages|templates|lib|includes)">
-            Order deny,allow
-            Deny from all
-        </Directory>
+    <Directory ~ "^{{ doc_root }}/(pages|templates|lib|includes)">
+        Order deny,allow
+        Deny from all
+    </Directory>
 
     {% if install_phpymyadmin %}
     Alias /phpmyadmin /usr/share/phpmyadmin
