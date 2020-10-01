@@ -120,10 +120,10 @@
         SSLEngine on
 
         # Path to the certificate
-        SSLCertificateFile	  {{ ssl_key_dir }}/{{ ssl_cert_name }}
-        SSLCertificateKeyFile {{ ssl_key_dir }}/{{ ssl_key_name }}
+        SSLCertificateFile	  {{ ssl_key_dir }}{{ ssl_cert_name }}
+        SSLCertificateKeyFile {{ ssl_key_dir }}{{ ssl_key_name }}
         {% if ssl_ca_name is defined %}
-            SSLCACertificateFile  {{ ssl_key_dir }}/{{ ssl_ca_name }}
+            SSLCACertificateFile  {{ ssl_key_dir }}{{ ssl_ca_name }}
         {% endif %}
     {% endif %}
 </VirtualHost>
