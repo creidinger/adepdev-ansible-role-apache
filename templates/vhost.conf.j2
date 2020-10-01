@@ -90,7 +90,7 @@
         </Directory>
     {% endif %}
 
-    {% if deploy_mysql %}
+    {% if install_mysql %}
         Alias /mysql_backup {{ mysql_backup_root }}
         <Directory {{ mysql_backup_root }}>
             SetEnv MYSQL_DATABASE {{ mysql_database }}
