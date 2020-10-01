@@ -2,7 +2,7 @@
 - name: Install apache2
   package:
     pkg: "{{ item }}"
-    state: latest
+    state: present
   loop:
     - apache2
     - libapache2-mod-security2
