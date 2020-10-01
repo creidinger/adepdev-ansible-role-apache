@@ -9,6 +9,4 @@ local_deploy: True
 
 install_phpymyadmin: True
 
-ssl_key_dir: /etc/ssl
-
-install_mysql: False
+ssl_key_dir: /etc/apache2/ssl/
