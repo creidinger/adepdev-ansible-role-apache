@@ -24,22 +24,23 @@
 {% endif %}
         ServerAdmin {{ server_admin }}
         {% if laravel_config %}
-            DocumentRoot {{ doc_root }}/public
+        DocumentRoot {{ doc_root }}/public
         {% else %}
-            DocumentRoot {{ doc_root }}
+        DocumentRoot {{ doc_root }}
         {% endif %}
-            ServerName {{ servername }}
-            ServerAlias {{ serveralias }}
 
-            {% if local_deploy %}
-                EnableSendfile off
-            {% endif %}
+        ServerName {{ servername }}
+        ServerAlias {{ serveralias }}
 
-            {% if laravel_config %}
-                <Directory {{ doc_root }}/public>
-            {% else %}
-                <Directory {{ doc_root }}>
-            {% endif %}
+        {% if local_deploy %}
+        EnableSendfile off
+        {% endif %}
+
+        {% if laravel_config %}
+        <Directory {{ doc_root }}/public>
+        {% else %}
+        <Directory {{ doc_root }}>
+        {% endif %}
 
             AllowOverride None
             Options -Indexes +FollowSymLinks
@@ -60,19 +61,20 @@
 
 
             {% if auth_type=="basic" %}
-                AuthType Basic
-                AuthName "This page is restricted"
-                AuthBasicProvider file
-                AuthUserFile /etc/apache2/{{ servername }}-passwd
-                Require valid-user
+            AuthType Basic
+            AuthName "This page is restricted"
+            AuthBasicProvider file
+            AuthUserFile /etc/apache2/{{ servername }}-passwd
+            Require valid-user
             {% else %}
-                Require all granted
+            Require all granted
             {% endif %}
+
             Order allow,deny
             Allow from all
 
             {% if local_deploy %}
-                EnableSendfile Off
+            EnableSendfile Off
             {% endif %}
         </Directory>
 
@@ -82,48 +84,50 @@
         </Directory>
 
     {% if install_phpymyadmin %}
-        Alias /phpmyadmin /usr/share/phpmyadmin
-        <Directory /usr/share/phpmyadmin>
-            AllowOverride All
-            Order allow,deny
-            Allow from all
-        </Directory>
+    Alias /phpmyadmin /usr/share/phpmyadmin
+    <Directory /usr/share/phpmyadmin>
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    </Directory>
     {% endif %}
 
     {% if install_mysql %}
-        Alias /mysql_backup {{ mysql_backup_root }}
-        <Directory {{ mysql_backup_root }}>
-            SetEnv MYSQL_DATABASE {{ mysql_database }}
-            SetEnv MYSQL_USERNAME {{ mysql_user }}
-            SetEnv MYSQL_PASSWORD {{ mysql_password }}
-            SetEnv MYSQL_HOSTNAME {{ mysql_hostname }}
-            SetEnv MYSQL_PORT {{ mysql_port }}
+    Alias /mysql_backup {{ mysql_backup_root }}
+    <Directory {{ mysql_backup_root }}>
+        SetEnv MYSQL_DATABASE {{ mysql_database }}
+        SetEnv MYSQL_USERNAME {{ mysql_user }}
+        SetEnv MYSQL_PASSWORD {{ mysql_password }}
+        SetEnv MYSQL_HOSTNAME {{ mysql_hostname }}
+        SetEnv MYSQL_PORT {{ mysql_port }}
 
-            AllowOverride None
-            Require all granted
-            Order allow,deny
-            Allow from all
-        </Directory>
+        AllowOverride None
+        Require all granted
+        Order allow,deny
+        Allow from all
+    </Directory>
     {% endif %}
 
     {% if local_deploy %}
-        ErrorLog {{ apache_log_dir }}/{{ servername }}-error.log
-        CustomLog {{ apache_log_dir }}/{{ servername }}-access.log combined
+    ErrorLog {{ apache_log_dir }}/{{ servername }}-error.log
+    CustomLog {{ apache_log_dir }}/{{ servername }}-access.log combined
+
     {% else %}
-        ErrorLog {{ apache_log_dir }}/{{ servername }}-ssl-error.log
-        CustomLog {{ apache_log_dir }}/{{ servername }}-ssl-access.log combined
+    ErrorLog {{ apache_log_dir }}/{{ servername }}-ssl-error.log
+    CustomLog {{ apache_log_dir }}/{{ servername }}-ssl-access.log combined
 
-        SSLOptions +StdEnvVars
+    SSLOptions +StdEnvVars
 
-        # SSL Engine Switch:
-        # Enable/Disable SSL for this virtual host.
-        SSLEngine on
+    # SSL Engine Switch:
+    # Enable/Disable SSL for this virtual host.
+    SSLEngine on
 
-        # Path to the certificate
-        SSLCertificateFile	  {{ ssl_key_dir }}{{ ssl_cert_name }}
-        SSLCertificateKeyFile {{ ssl_key_dir }}{{ ssl_key_name }}
-        {% if ssl_ca_name is defined %}
-            SSLCACertificateFile  {{ ssl_key_dir }}{{ ssl_ca_name }}
-        {% endif %}
+    # Path to the certificate
+    SSLCertificateFile	  {{ ssl_key_dir }}{{ ssl_cert_name }}
+    SSLCertificateKeyFile {{ ssl_key_dir }}{{ ssl_key_name }}
+    {% if ssl_ca_name is defined %}
+    SSLCACertificateFile  {{ ssl_key_dir }}{{ ssl_ca_name }}
+    {% endif %}
+
     {% endif %}
 </VirtualHost>
