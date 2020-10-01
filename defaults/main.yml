@@ -3,4 +3,10 @@ apache_log_dir: /var/log/apache2
 
 vhost_conf_file_name: 000-default.conf
 
-laravel_config: False
+laravel_config: false
+
+local_deploy: true
+
+install_phpymyadmin: true
+
+ssl_key_dir: /etc/ssl
