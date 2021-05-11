@@ -47,7 +47,7 @@
             Header set X-UA-Compatible: IE=edge
             SetEnv ENV_URL {{ base_url }}
 
-            {% if debug_mode is defined %}
+            {% if debug_mode %}
                 SetEnv APP_DEBUG on
             {% endif %}
 
