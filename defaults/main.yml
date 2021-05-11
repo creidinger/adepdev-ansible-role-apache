@@ -7,7 +7,7 @@ laravel_config: False
 
 local_deploy: True
 
-install_phpymyadmin: True
+install_phpymyadmin: False
 
 ssl_key_dir: /etc/ssl
 
